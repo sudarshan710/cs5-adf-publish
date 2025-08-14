@@ -52,7 +52,7 @@ jobs:
           run_id=${{ steps.wait_pipeline.outputs.run_id }}
           echo "Fetching Databricks notebook output from pipeline run: $run_id"
 
-          activity_output=$(az datafactory activity-run list \
+          activity_output=$(az datafactory activity-run query-by-pipeline-run \
             --factory-name ${{ secrets.ADF_NAME }} \
             --resource-group ${{ secrets.ADF_RESOURCE_GROUP }} \
             --run-id $run_id \
