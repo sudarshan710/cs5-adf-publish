@@ -116,7 +116,13 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebookPath": "/Users/traininguser7@sudosu.ai/exec"
+					"notebookPath": "/Users/traininguser7@sudosu.ai/exec",
+					"baseParameters": {
+						"SinkPath": {
+							"value": "@pipeline().parameters.SinkPath",
+							"type": "Expression"
+						}
+					}
 				},
 				"linkedServiceName": {
 					"referenceName": "AzureDatabricks1",
@@ -124,6 +130,12 @@
 				}
 			}
 		],
+		"parameters": {
+			"SinkPath": {
+				"type": "string",
+				"defaultValue": "raw/"
+			}
+		},
 		"annotations": []
 	}
 }
