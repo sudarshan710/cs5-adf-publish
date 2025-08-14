@@ -74,8 +74,8 @@ jobs:
             --last-updated-before "$end_time" \
             --output json)
 
-          echo "Raw activity run output:"
-          echo "$activity_output" | jq '.'
+          # echo "Raw activity run output:"
+          # echo "$activity_output" | jq '.'
 
           # Extract notebook output from the Databricks activity
           notebook_output=$(echo "$activity_output" | jq -r '.value[] | select(.activityName == "RunDatabricksNotebook") | .output.runOutput')
