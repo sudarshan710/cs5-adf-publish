@@ -1,0 +1,9 @@
+{
+	"name": "sudarshan-df",
+	"location": "switzerlandnorth",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "e24a5e10-541c-4544-9189-791674175f80",
+		"tenantId": "b83e6911-8ded-4c6d-b4a7-eb4975c7e4da"
+	}
+}
