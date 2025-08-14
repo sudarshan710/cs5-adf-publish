@@ -1,0 +1,29 @@
+{
+	"name": "SqlServerTable1_NoParam",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlServer1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "TableName",
+				"type": "varchar"
+			},
+			{
+				"name": "SinkPath",
+				"type": "varchar"
+			},
+			{
+				"name": "Query",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Metadata_Control"
+		}
+	}
+}
