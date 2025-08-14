@@ -47,10 +47,10 @@ jobs:
 
           echo "run_id=$run_id" >> $GITHUB_OUTPUT
 
-      - name: Get and print Databricks output
+      - name: Get Databricks notebook output from ADF pipeline run
+        id: get_notebook_output
         run: |
           run_id=${{ steps.wait_pipeline.outputs.run_id }}
-          echo "Fetching Databricks notebook output from pipeline run: $run_id"
 
           # Get pipeline run start and end times
           pipeline_info=$(az datafactory pipeline-run show \
@@ -62,9 +62,6 @@ jobs:
           start_time=$(echo "$pipeline_info" | jq -r '.runStart')
           end_time=$(echo "$pipeline_info" | jq -r '.runEnd')
 
-          echo "Pipeline started at: $start_time"
-          echo "Pipeline ended at: $end_time"
-
           # Query activity run output within that time range
           activity_output=$(az datafactory activity-run query-by-pipeline-run \
             --factory-name ${{ secrets.ADF_NAME }} \
@@ -74,11 +71,16 @@ jobs:
             --last-updated-before "$end_time" \
             --output json)
 
-          # echo "Raw activity run output:"
-          # echo "$activity_output" | jq '.'
-
-          # Extract notebook output from the Databricks activity
+          # Extract notebook output from Databricks activity
           notebook_output=$(echo "$activity_output" | jq -r '.value[] | select(.activityName == "RunDatabricksNotebook") | .output.runOutput')
 
-          echo "Databricks Notebook Output:"
-          echo "$notebook_output" | jq '.'
+          echo "Raw notebook output string:"
+          echo "$notebook_output"
+
+          # Save the output for next steps
+          echo "notebook_output=$notebook_output" >> $GITHUB_OUTPUT
+
+      - name: Print parsed notebook output JSON
+        run: |
+          # notebook_output is a JSON string — parse and pretty print it
+          echo '${{ steps.get_notebook_output.outputs.notebook_output }}' | jq .
