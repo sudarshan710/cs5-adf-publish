@@ -52,17 +52,33 @@ jobs:
           run_id=${{ steps.wait_pipeline.outputs.run_id }}
           echo "Fetching Databricks notebook output from pipeline run: $run_id"
 
-          activity_output=$(az datafactory activity-run query-by-pipeline-run \
+          # Get pipeline run start and end times
+          pipeline_info=$(az datafactory pipeline-run show \
             --factory-name ${{ secrets.ADF_NAME }} \
             --resource-group ${{ secrets.ADF_RESOURCE_GROUP }} \
             --run-id $run_id \
             --output json)
 
+          start_time=$(echo "$pipeline_info" | jq -r '.runStart')
+          end_time=$(echo "$pipeline_info" | jq -r '.runEnd')
+
+          echo "Pipeline started at: $start_time"
+          echo "Pipeline ended at: $end_time"
+
+          # Query activity run output within that time range
+          activity_output=$(az datafactory activity-run query-by-pipeline-run \
+            --factory-name ${{ secrets.ADF_NAME }} \
+            --resource-group ${{ secrets.ADF_RESOURCE_GROUP }} \
+            --pipeline-run-id $run_id \
+            --last-updated-after "$start_time" \
+            --last-updated-before "$end_time" \
+            --output json)
+
           echo "Raw activity run output:"
           echo "$activity_output" | jq '.'
 
-          # Extract notebook output from the specific activity
-          notebook_output=$(echo "$activity_output" | jq -r '.[] | select(.activityName == "RunDatabricksNotebook") | .output.runOutput')
+          # Extract notebook output from the Databricks activity
+          notebook_output=$(echo "$activity_output" | jq -r '.value[] | select(.activityName == "RunDatabricksNotebook") | .output.runOutput')
 
           echo "Databricks Notebook Output:"
           echo "$notebook_output" | jq '.'
