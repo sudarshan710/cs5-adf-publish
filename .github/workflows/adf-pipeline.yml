@@ -92,7 +92,7 @@ jobs:
             --query "sort_by([].{name:name, lastModified:properties.lastModified}, &lastModified)[-1].name" \
             --output tsv)
 
-          echo "📂 Latest blob: $latest_blob"
+          echo "Latest blob: $latest_blob"
 
           az storage blob download \
             --account-name ${{ secrets.STORAGE_ACCOUNT }} \
@@ -103,5 +103,5 @@ jobs:
 
       - name: Print Deequ Log Contents
         run: |
-          echo "📋 Deequ Log Contents:"
+          echo "Deequ Log Contents:"
           cat log.json | jq .
