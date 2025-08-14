@@ -14,8 +14,31 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Trigger ADF Pipeline
+        id: trigger_pipeline
         run: |
-          az datafactory pipeline create-run \
+          run_id=$(az datafactory pipeline create-run \
             --factory-name ${{ secrets.ADF_NAME }} \
             --resource-group ${{ secrets.ADF_RESOURCE_GROUP }} \
-            --name "pipeline1"
+            --name "pipeline1" \
+            --query runId -o tsv)
+          echo "run_id=$run_id"
+          echo "run_id=$run_id" >> $GITHUB_OUTPUT
+
+      - name: Wait for pipeline to complete
+        run: |
+          status="InProgress"
+          while [[ "$status" == "InProgress" || "$status" == "Queued" ]]; do
+            echo "Pipeline run status: $status"
+            sleep 15
+            status=$(az datafactory pipeline-run show \
+              --factory-name ${{ secrets.ADF_NAME }} \
+              --resource-group ${{ secrets.ADF_RESOURCE_GROUP }} \
+              --run-id ${{ steps.trigger_pipeline.outputs.run_id }} \
+              --query status -o tsv)
+          done
+
+          echo "Final pipeline run status: $status"
+          if [[ "$status" != "Succeeded" ]]; then
+            echo "Pipeline failed!"
+            exit 1
+          fi
