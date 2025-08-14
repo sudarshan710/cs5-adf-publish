@@ -403,6 +403,283 @@
 				"[concat(variables('factoryId'), '/datasets/DS_SQLSERVER')]",
 				"[concat(variables('factoryId'), '/datasets/DS_Sink')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/adfcdc1')]",
+			"type": "Microsoft.DataFactory/factories/adfcdcs",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"SourceConnectionsInfo": [
+					{
+						"SourceEntities": [
+							{
+								"name": "dbo.PLANT_A",
+								"properties": {
+									"schema": [],
+									"dslConnectorProperties": [
+										{
+											"name": "schemaName",
+											"value": "dbo"
+										},
+										{
+											"name": "tableName",
+											"value": "PLANT_A"
+										},
+										{
+											"name": "enableCdc",
+											"value": true
+										},
+										{
+											"name": "waterMarkColumn",
+											"value": "Timestamp_UTC"
+										}
+									]
+								}
+							},
+							{
+								"name": "dbo.PLANT_B",
+								"properties": {
+									"schema": [],
+									"dslConnectorProperties": [
+										{
+											"name": "schemaName",
+											"value": "dbo"
+										},
+										{
+											"name": "tableName",
+											"value": "PLANT_B"
+										},
+										{
+											"name": "enableCdc",
+											"value": true
+										},
+										{
+											"name": "waterMarkColumn",
+											"value": "Timestamp_UTC"
+										}
+									]
+								}
+							},
+							{
+								"name": "dbo.PLANT_C",
+								"properties": {
+									"schema": [],
+									"dslConnectorProperties": [
+										{
+											"name": "schemaName",
+											"value": "dbo"
+										},
+										{
+											"name": "tableName",
+											"value": "PLANT_C"
+										},
+										{
+											"name": "enableCdc",
+											"value": true
+										},
+										{
+											"name": "waterMarkColumn",
+											"value": "Timestamp_UTC"
+										}
+									]
+								}
+							}
+						],
+						"Connection": {
+							"linkedService": {
+								"referenceName": "SqlServer1",
+								"type": "LinkedServiceReference"
+							},
+							"linkedServiceType": "SqlServer",
+							"type": "linkedservicetype",
+							"isInlineDataset": true,
+							"commonDslConnectorProperties": [
+								{
+									"name": "allowSchemaDrift",
+									"value": true
+								},
+								{
+									"name": "inferDriftedColumnTypes",
+									"value": true
+								},
+								{
+									"name": "format",
+									"value": "table"
+								},
+								{
+									"name": "store",
+									"value": "sqlserver"
+								},
+								{
+									"name": "databaseType",
+									"value": "databaseType"
+								},
+								{
+									"name": "database",
+									"value": "database"
+								},
+								{
+									"name": "skipInitialLoad",
+									"value": true
+								}
+							]
+						}
+					}
+				],
+				"TargetConnectionsInfo": [
+					{
+						"TargetEntities": [
+							{
+								"name": "newraw/dbo.PLANT_A",
+								"properties": {
+									"schema": [],
+									"dslConnectorProperties": [
+										{
+											"name": "container",
+											"value": "newraw"
+										},
+										{
+											"name": "fileSystem",
+											"value": "newraw"
+										},
+										{
+											"name": "folderPath",
+											"value": "dbo.PLANT_A"
+										}
+									]
+								}
+							},
+							{
+								"name": "newraw/dbo.PLANT_B",
+								"properties": {
+									"schema": [],
+									"dslConnectorProperties": [
+										{
+											"name": "container",
+											"value": "newraw"
+										},
+										{
+											"name": "fileSystem",
+											"value": "newraw"
+										},
+										{
+											"name": "folderPath",
+											"value": "dbo.PLANT_B"
+										}
+									]
+								}
+							},
+							{
+								"name": "newraw/dbo.PLANT_C",
+								"properties": {
+									"schema": [],
+									"dslConnectorProperties": [
+										{
+											"name": "container",
+											"value": "newraw"
+										},
+										{
+											"name": "fileSystem",
+											"value": "newraw"
+										},
+										{
+											"name": "folderPath",
+											"value": "dbo.PLANT_C"
+										}
+									]
+								}
+							}
+						],
+						"Connection": {
+							"linkedService": {
+								"referenceName": "AzureDataLakeStorage1",
+								"type": "LinkedServiceReference"
+							},
+							"linkedServiceType": "AzureBlobFS",
+							"type": "linkedservicetype",
+							"isInlineDataset": true,
+							"commonDslConnectorProperties": [
+								{
+									"name": "allowSchemaDrift",
+									"value": true
+								},
+								{
+									"name": "inferDriftedColumnTypes",
+									"value": true
+								},
+								{
+									"name": "format",
+									"value": "delimited"
+								},
+								{
+									"name": "columnNamesAsHeader",
+									"value": true
+								},
+								{
+									"name": "columnDelimiter",
+									"value": ","
+								},
+								{
+									"name": "escapeChar",
+									"value": "\\\\"
+								},
+								{
+									"name": "quoteChar",
+									"value": "\\\""
+								}
+							]
+						},
+						"DataMapperMappings": [
+							{
+								"targetEntityName": "newraw/dbo.PLANT_A",
+								"sourceEntityName": "dbo.PLANT_A",
+								"sourceConnectionReference": {
+									"connectionName": "SqlServer1",
+									"type": "linkedservicetype"
+								},
+								"attributeMappingInfo": {
+									"attributeMappings": []
+								}
+							},
+							{
+								"targetEntityName": "newraw/dbo.PLANT_B",
+								"sourceEntityName": "dbo.PLANT_B",
+								"sourceConnectionReference": {
+									"connectionName": "SqlServer1",
+									"type": "linkedservicetype"
+								},
+								"attributeMappingInfo": {
+									"attributeMappings": []
+								}
+							},
+							{
+								"targetEntityName": "newraw/dbo.PLANT_C",
+								"sourceEntityName": "dbo.PLANT_C",
+								"sourceConnectionReference": {
+									"connectionName": "SqlServer1",
+									"type": "linkedservicetype"
+								},
+								"attributeMappingInfo": {
+									"attributeMappings": []
+								}
+							}
+						],
+						"Relationships": []
+					}
+				],
+				"Policy": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 15
+					},
+					"mode": "Microbatch"
+				},
+				"allowVNetOverride": false
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SqlServer1')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
+			]
 		}
 	]
 }
