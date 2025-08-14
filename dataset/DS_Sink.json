@@ -2,7 +2,7 @@
 	"name": "DS_Sink",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "DS_BlobSink",
+			"referenceName": "AzureDataLakeStorage1",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
@@ -14,12 +14,12 @@
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobStorageLocation",
+				"type": "AzureBlobFSLocation",
 				"folderPath": {
 					"value": "@dataset().pSinkPath",
 					"type": "Expression"
 				},
-				"container": "raw"
+				"fileSystem": "raw"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
