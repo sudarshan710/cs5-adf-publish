@@ -25,7 +25,9 @@ jobs:
           echo "run_id=$run_id" >> $GITHUB_OUTPUT
 
       - name: Wait for pipeline to complete
+        id: wait_pipeline
         run: |
+          run_id=${{ steps.trigger_pipeline.outputs.run_id }}
           status="InProgress"
           while [[ "$status" == "InProgress" || "$status" == "Queued" ]]; do
             echo "Pipeline run status: $status"
@@ -33,7 +35,7 @@ jobs:
             status=$(az datafactory pipeline-run show \
               --factory-name ${{ secrets.ADF_NAME }} \
               --resource-group ${{ secrets.ADF_RESOURCE_GROUP }} \
-              --run-id ${{ steps.trigger_pipeline.outputs.run_id }} \
+              --run-id $run_id \
               --query status -o tsv)
           done
 
@@ -42,3 +44,25 @@ jobs:
             echo "Pipeline failed!"
             exit 1
           fi
+
+          echo "run_id=$run_id" >> $GITHUB_OUTPUT
+
+      - name: Get and print Databricks output
+        run: |
+          run_id=${{ steps.wait_pipeline.outputs.run_id }}
+          echo "Fetching Databricks notebook output from pipeline run: $run_id"
+
+          activity_output=$(az datafactory activity-run list \
+            --factory-name ${{ secrets.ADF_NAME }} \
+            --resource-group ${{ secrets.ADF_RESOURCE_GROUP }} \
+            --run-id $run_id \
+            --output json)
+
+          echo "Raw activity run output:"
+          echo "$activity_output" | jq '.'
+
+          # Extract notebook output from the specific activity
+          notebook_output=$(echo "$activity_output" | jq -r '.[] | select(.activityName == "RunDatabricksNotebook") | .output.runOutput')
+
+          echo "Databricks Notebook Output:"
+          echo "$notebook_output" | jq '.'
