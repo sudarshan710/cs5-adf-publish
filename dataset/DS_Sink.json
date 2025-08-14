@@ -5,11 +5,20 @@
 			"referenceName": "DS_BlobSink",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"pSinkPath": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
+				"folderPath": {
+					"value": "@dataset().pSinkPath",
+					"type": "Expression"
+				},
 				"container": "raw"
 			},
 			"columnDelimiter": ",",
