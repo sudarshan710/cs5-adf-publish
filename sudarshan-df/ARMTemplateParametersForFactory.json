@@ -5,8 +5,20 @@
 		"factoryName": {
 			"value": "sudarshan-df"
 		},
+		"SqlServer1_password": {
+			"value": ""
+		},
 		"DS_BlobSink_sasUri": {
 			"value": ""
+		},
+		"SqlServer1_properties_typeProperties_server": {
+			"value": "sudarshan-sql-server.database.windows.net"
+		},
+		"SqlServer1_properties_typeProperties_database": {
+			"value": "sudarshan-db"
+		},
+		"SqlServer1_properties_typeProperties_userName": {
+			"value": "sudarshan"
 		}
 	}
 }
